@@ -24,7 +24,7 @@ public:
 protected:
 	// 게임 모드도 이미 기본적으로 가지고 있지만, 우리는 연습을 위해서...
 	// Player 인원수를 카운트해서 담을 변수를 만들어줍니다.
-	UPROPERTY(Replicated)
+	UPROPERTY(Replicated, BlueprintReadOnly, meta = (AllowPravateAccess = "true"))
 	int32 PlayerCount;
 
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const override;
