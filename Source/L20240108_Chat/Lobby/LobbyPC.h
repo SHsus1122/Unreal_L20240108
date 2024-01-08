@@ -20,7 +20,7 @@ public:
 
 	// 하드 코딩으로 사용할 때
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
-	TObjectPtr<UUserWidget> LobbyWidgetObject;
+	TObjectPtr<ULobbyWidgetBase> LobbyWidgetObject;
 
 	// 블루프린트에서 편집에서 사용할 때
 	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")

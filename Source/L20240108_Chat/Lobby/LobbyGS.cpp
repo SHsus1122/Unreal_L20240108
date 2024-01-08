@@ -3,6 +3,9 @@
 
 #include "LobbyGS.h"
 #include "Net/UnrealNetwork.h"
+#include "LobbyPC.h"
+#include "Kismet/GameplayStatics.h"
+#include "LobbyWidgetBase.h"
 
 void ALobbyGS::IncreasePlayerCount()
 {
@@ -14,6 +17,18 @@ void ALobbyGS::DecreasePlayerCount()
 {
 	PlayerCount--;
 	UE_LOG(LogTemp, Warning, TEXT("PlayerCount %d"), PlayerCount);
+}
+
+// Server 빼고 실행
+void ALobbyGS::OnRep_PlayerCount()
+{
+	ALobbyPC* PC = Cast<ALobbyPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	// BeginPlay 이후 위젯을 생성하는데 그 전에 호출되서 터지는 것을 방지하기 위해서 PC->LobbyWidgetObject 를 if 문에 추가
+	if (PC && PC->LobbyWidgetObject)
+	{
+		// UI Update
+		PC->LobbyWidgetObject->UpdatePlayerCount(PlayerCount);
+	}
 }
 
 void ALobbyGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

@@ -13,6 +13,7 @@ void ALobbyGM::PostLogin(APlayerController* NewPlayer)
 	if (GS)
 	{
 		GS->IncreasePlayerCount();
+		GS->OnRep_PlayerCount();	// Only Server Call
 	}
 }
 
@@ -22,8 +23,20 @@ void ALobbyGM::Logout(AController* Exiting)
 	if (GS)
 	{
 		GS->DecreasePlayerCount();
+		GS->OnRep_PlayerCount();	// Only Server Call
 	}
 
 	// 호출하면 Player State 를 날려버리기 때문에 이전과 다르게 그 전에 작업할 것들을 처리하고 부모를 호출합니다.
 	Super::Logout(Exiting);
+}
+
+void ALobbyGM::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ALobbyGS* GS = GetGameState<ALobbyGS>();
+	if (GS)
+	{
+		GS->OnRep_PlayerCount();	// Only Server Call
+	}
 }
