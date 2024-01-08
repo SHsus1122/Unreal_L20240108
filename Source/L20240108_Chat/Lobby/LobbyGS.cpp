@@ -31,11 +31,24 @@ void ALobbyGS::OnRep_PlayerCount()
 	}
 }
 
+void ALobbyGS::S2A_UpdateLeftTime_Implementation(int InLeftTime)
+{
+	LeftTime = InLeftTime;
+
+	ALobbyPC* PC = Cast<ALobbyPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	// BeginPlay 이후 위젯을 생성하는데 그 전에 호출되서 터지는 것을 방지하기 위해서 PC->LobbyWidgetObject 를 if 문에 추가
+	if (PC && PC->LobbyWidgetObject)
+	{
+		// UI Update
+		PC->LobbyWidgetObject->UpdateLeftTime(LeftTime);
+	}
+}
+
 void ALobbyGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ALobbyGS, PlayerCount);
 
 	// 특정 조건에 따라 리플리케이트를 보내는 매크로
-	//DOREPLIFETIME_CONDITION()
+	//DOREPLIFETIME_CONDITION(ALobbyGS, PlayerCount, COND_InitialOnly);
 }

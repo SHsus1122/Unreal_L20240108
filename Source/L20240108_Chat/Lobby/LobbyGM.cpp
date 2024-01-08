@@ -39,4 +39,32 @@ void ALobbyGM::BeginPlay()
 	{
 		GS->OnRep_PlayerCount();	// Only Server Call
 	}
+
+	FTimerHandle LeftTimerHandle;
+	// 맨 뒤의 인자 -1.0f 은 무조건 바로 시작이고 숫자가 이보다 크면 몇 초 뒤에 시작한다는 말
+	// [&] 는 자기 자신의 것을 가져와서 사용한다는 의미입니다.
+	// 아래 주석은 람다 사용법으로 람다에서 S2A_UpdateLeftTime 함수 호출은 불가능하기에 아래 함수를 사용하지는 말도록 합니다.
+	//GetWorld()->GetTimerManager().SetTimer(LeftTimerHandle, 
+	//	FTimerDelegate::CreateLambda(
+	//		[&]() {
+	//			if (GS)
+	//			{
+	//				GS->LeftTime--;
+	//				//GS->S2A_UpdateLeftTime(GS->LeftTime); 
+	//			}
+	//		}
+	//	), 
+	//	1.0f, true, -1.0f);
+
+	GetWorld()->GetTimerManager().SetTimer(LeftTimerHandle, this, &ALobbyGM::UpdateLeftTime, 1.0f, true, -1.0f);
+}
+
+void ALobbyGM::UpdateLeftTime()
+{
+	ALobbyGS* GS = GetGameState<ALobbyGS>();
+	if (GS)
+	{
+		GS->LeftTime--;
+		GS->S2A_UpdateLeftTime(GS->LeftTime);
+	}
 }

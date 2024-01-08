@@ -29,7 +29,16 @@ protected:
 
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const override;
 
+
 public:
 	UFUNCTION()
 	void OnRep_PlayerCount();
+	
+	// Server 에서 모두에게 호출
+	UFUNCTION(NetMulticast, Unreliable)
+	void S2A_UpdateLeftTime(int InLeftTime);	// Call Server
+	void S2A_UpdateLeftTime_Implementation(int InLeftTime);	// Execute All Clients
+
+	// 플레이 타임 남은 시간을 담을 변수, C++ 은 헤더에서 바로 초기화 가능(UPROPERTY 사용하지 않았을 때만)
+	int32 LeftTime = 60;
 };
